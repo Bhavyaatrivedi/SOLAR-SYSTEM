@@ -50,30 +50,28 @@ scene.background = cubeTextureLoader.load([
 
 const textureLoader = new THREE.TextureLoader();
 
+const sunGeo = new THREE.SphereGeometry(16,30, 30);
+const sunMat = new THREE.MeshBasicMaterial({
+    map : textureLoader.load(sunTexture)
+});
+const sun = new THREE.Mesh(sunGeo, sunMat);
+scene.add(sun);
+
+const mercuryGeo = new THREE.SphereGeometry(3.2,30, 30);
+const mercuryMat = new THREE.MeshStandardMaterial({
+    map : textureLoader.load(mercuryTexture)
+});
+const mercury = new THREE.Mesh(mercuryGeo, mercuryMat);
+// scene.add(mercury);
+sun.add(mercury);
+mercury.position.x = 28;
+
+const pointLight = new THREE.PointLight(0xFFFFFF, 2, 200);
+scene.add(pointLight);
+
 function animate() {
-    //Self-rotation
-    sun.rotateY(0.004);
-    mercury.mesh.rotateY(0.004);
-    venus.mesh.rotateY(0.002);
-    earth.mesh.rotateY(0.02);
-    mars.mesh.rotateY(0.018);
-    jupiter.mesh.rotateY(0.04);
-    saturn.mesh.rotateY(0.038);
-    uranus.mesh.rotateY(0.03);
-    neptune.mesh.rotateY(0.032);
-    pluto.mesh.rotateY(0.008);
-
-    //Around-sun-rotation
-    mercury.obj.rotateY(0.04);
-    venus.obj.rotateY(0.015);
-    earth.obj.rotateY(0.01);
-    mars.obj.rotateY(0.008);
-    jupiter.obj.rotateY(0.002);
-    saturn.obj.rotateY(0.0009);
-    uranus.obj.rotateY(0.0004);
-    neptune.obj.rotateY(0.0001);
-    pluto.obj.rotateY(0.00007);
-
+    mercury.rotateY(0.007)
+    sun.rotateY(0.007)
     renderer.render(scene, camera);
 }
 
