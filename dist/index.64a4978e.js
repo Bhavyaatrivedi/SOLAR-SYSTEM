@@ -606,48 +606,79 @@ scene.background = cubeTextureLoader.load([
     (0, _starsJpgDefault.default)
 ]);
 const textureLoader = new _three.TextureLoader();
-//SUN
 const sunGeo = new _three.SphereGeometry(16, 30, 30);
 const sunMat = new _three.MeshBasicMaterial({
     map: textureLoader.load((0, _sunJpgDefault.default))
 });
 const sun = new _three.Mesh(sunGeo, sunMat);
 scene.add(sun);
-//MERCURY
-const mercuryGeo = new _three.SphereGeometry(3.2, 30, 30);
-const mercuryMat = new _three.MeshStandardMaterial({
-    map: textureLoader.load((0, _mercuryJpgDefault.default))
+function createPlanete(size, texture, position, ring) {
+    const geo = new _three.SphereGeometry(size, 30, 30);
+    const mat = new _three.MeshStandardMaterial({
+        map: textureLoader.load(texture)
+    });
+    const mesh = new _three.Mesh(geo, mat);
+    const obj = new _three.Object3D();
+    obj.add(mesh);
+    if (ring) {
+        const ringGeo = new _three.RingGeometry(ring.innerRadius, ring.outerRadius, 32);
+        const ringMat = new _three.MeshBasicMaterial({
+            map: textureLoader.load(ring.texture),
+            side: _three.DoubleSide
+        });
+        const ringMesh = new _three.Mesh(ringGeo, ringMat);
+        obj.add(ringMesh);
+        ringMesh.position.x = position;
+        ringMesh.rotation.x = -0.5 * Math.PI;
+    }
+    scene.add(obj);
+    mesh.position.x = position;
+    return {
+        mesh,
+        obj
+    };
+}
+const mercury = createPlanete(3.2, (0, _mercuryJpgDefault.default), 28);
+const venus = createPlanete(5.8, (0, _venusJpgDefault.default), 44);
+const earth = createPlanete(6, (0, _earthJpgDefault.default), 62);
+const mars = createPlanete(4, (0, _marsJpgDefault.default), 78);
+const jupiter = createPlanete(12, (0, _jupiterJpgDefault.default), 100);
+const saturn = createPlanete(10, (0, _saturnJpgDefault.default), 138, {
+    innerRadius: 10,
+    outerRadius: 20,
+    texture: (0, _saturnRingPngDefault.default)
 });
-const mercury = new _three.Mesh(mercuryGeo, mercuryMat);
-const mercuryObj = new _three.Object3D();
-mercuryObj.add(mercury);
-scene.add(mercury);
-mercury.position.x = 28;
-//SATURN
-const saturnGeo = new _three.SphereGeometry(10, 30, 30);
-const saturnMat = new _three.MeshStandardMaterial({
-    map: textureLoader.load((0, _saturnJpgDefault.default))
+const uranus = createPlanete(7, (0, _uranusJpgDefault.default), 176, {
+    innerRadius: 7,
+    outerRadius: 12,
+    texture: (0, _uranusRingPngDefault.default)
 });
-const saturn = new _three.Mesh(saturnGeo, saturnMat);
-const saturnObj = new _three.Object3D();
-saturnObj.add(saturn);
-scene.add(saturnObj);
-saturn.position.x = 138;
-const saturnRingGeo = new _three.SphereGeometry(10, 30, 30);
-const saturnRingMat = new _three.MeshBasicMaterial({
-    map: textureLoader.load((0, _saturnRingPngDefault.default)),
-    side: _three.DoubleSide
-});
-const saturnRing = new _three.Mesh(saturnRingGeo, saturnRingMat);
-saturnObj.add(saturnRing);
-saturnRing.position.x = 138;
-//POINT LIGHT
-const pointLight = new _three.PointLight(0xFFFFFF, 2, 200);
+const neptune = createPlanete(7, (0, _neptuneJpgDefault.default), 200);
+const pluto = createPlanete(2.8, (0, _plutoJpgDefault.default), 216);
+const pointLight = new _three.PointLight(0xFFFFFF, 2, 300);
 scene.add(pointLight);
 function animate() {
-    mercury.rotateY(0.007);
-    mercuryObj.rotateY(0.04);
-    sun.rotateY(0.007);
+    //Self-rotation
+    sun.rotateY(0.004);
+    mercury.mesh.rotateY(0.004);
+    venus.mesh.rotateY(0.002);
+    earth.mesh.rotateY(0.02);
+    mars.mesh.rotateY(0.018);
+    jupiter.mesh.rotateY(0.04);
+    saturn.mesh.rotateY(0.038);
+    uranus.mesh.rotateY(0.03);
+    neptune.mesh.rotateY(0.032);
+    pluto.mesh.rotateY(0.008);
+    //Around-sun-rotation
+    mercury.obj.rotateY(0.04);
+    venus.obj.rotateY(0.015);
+    earth.obj.rotateY(0.01);
+    mars.obj.rotateY(0.008);
+    jupiter.obj.rotateY(0.002);
+    saturn.obj.rotateY(0.0009);
+    uranus.obj.rotateY(0.0004);
+    neptune.obj.rotateY(0.0001);
+    pluto.obj.rotateY(0.00007);
     renderer.render(scene, camera);
 }
 renderer.setAnimationLoop(animate);
