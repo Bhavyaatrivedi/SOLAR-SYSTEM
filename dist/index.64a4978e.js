@@ -606,24 +606,47 @@ scene.background = cubeTextureLoader.load([
     (0, _starsJpgDefault.default)
 ]);
 const textureLoader = new _three.TextureLoader();
+//SUN
 const sunGeo = new _three.SphereGeometry(16, 30, 30);
 const sunMat = new _three.MeshBasicMaterial({
     map: textureLoader.load((0, _sunJpgDefault.default))
 });
 const sun = new _three.Mesh(sunGeo, sunMat);
 scene.add(sun);
+//MERCURY
 const mercuryGeo = new _three.SphereGeometry(3.2, 30, 30);
 const mercuryMat = new _three.MeshStandardMaterial({
     map: textureLoader.load((0, _mercuryJpgDefault.default))
 });
 const mercury = new _three.Mesh(mercuryGeo, mercuryMat);
-// scene.add(mercury);
-sun.add(mercury);
+const mercuryObj = new _three.Object3D();
+mercuryObj.add(mercury);
+scene.add(mercury);
 mercury.position.x = 28;
+//SATURN
+const saturnGeo = new _three.SphereGeometry(10, 30, 30);
+const saturnMat = new _three.MeshStandardMaterial({
+    map: textureLoader.load((0, _saturnJpgDefault.default))
+});
+const saturn = new _three.Mesh(saturnGeo, saturnMat);
+const saturnObj = new _three.Object3D();
+saturnObj.add(saturn);
+scene.add(saturnObj);
+saturn.position.x = 138;
+const saturnRingGeo = new _three.SphereGeometry(10, 30, 30);
+const saturnRingMat = new _three.MeshBasicMaterial({
+    map: textureLoader.load((0, _saturnRingPngDefault.default)),
+    side: _three.DoubleSide
+});
+const saturnRing = new _three.Mesh(saturnRingGeo, saturnRingMat);
+saturnObj.add(saturnRing);
+saturnRing.position.x = 138;
+//POINT LIGHT
 const pointLight = new _three.PointLight(0xFFFFFF, 2, 200);
 scene.add(pointLight);
 function animate() {
     mercury.rotateY(0.007);
+    mercuryObj.rotateY(0.04);
     sun.rotateY(0.007);
     renderer.render(scene, camera);
 }
